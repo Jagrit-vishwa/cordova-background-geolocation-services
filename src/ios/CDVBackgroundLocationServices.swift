@@ -168,9 +168,9 @@ var activityCommandDelegate:CDVCommandDelegate?;
         log(message: "Prompting For Notification Permissions");
         if #available(iOS 8, *) {
             let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil);
-            UIApplication.shared().registerUserNotificationSettings(settings)
+            UIApplication.shared.registerUserNotificationSettings(settings)
         } else {
-            UIApplication.shared().registerForRemoteNotifications(matching: [UIRemoteNotificationType.alert, UIRemoteNotificationType.sound, UIRemoteNotificationType.badge]);
+            UIApplication.shared.registerForRemoteNotifications(matching: [UIRemoteNotificationType.alert, UIRemoteNotificationType.sound, UIRemoteNotificationType.badge]);
         }
     }
     
@@ -288,7 +288,7 @@ class LocationManager : NSObject, CLLocationManagerDelegate {
             "heading" : loc.course
         ]
         
-        return locDict;
+        return locDict as NSDictionary;
     }
     
     func stopBackgroundTracking() {
@@ -563,7 +563,7 @@ class ActivityManager : NSObject {
         
         log(message: "Received Detected Activities : \(detectedActivities)");
         
-        return detectedActivities;
+        return detectedActivities as NSDictionary;
     }
     
     func sendActivitiesToCallback(activities : NSDictionary) {
@@ -580,7 +580,7 @@ class ActivityManager : NSObject {
     }
     
     func startDetection() {
-        NSLog("Activity Manager - Starting Detection %@", self.available);
+        print("Activity Manager - Starting Detection " + self.available.description);
         if(useActivityDetection == false) {
             return;
         }
@@ -629,8 +629,7 @@ var syncSeconds:TimeInterval = 2;
 
 //Task Manager Singleton
 class TaskManager : NSObject {
-    
-    let priority = DispatchQueue.GlobalAttributes.qosUserInitiated;
+
     
     var _bgTaskList = [Int]();
     var _masterTaskId = UIBackgroundTaskInvalid;
@@ -638,7 +637,7 @@ class TaskManager : NSObject {
     func beginNewBackgroundTask() -> UIBackgroundTaskIdentifier {
         //log(message: "beginNewBackgroundTask called");
         
-        let app = UIApplication.shared();
+        let app = UIApplication.shared;
         
         var bgTaskId = UIBackgroundTaskInvalid;
         
@@ -668,7 +667,7 @@ class TaskManager : NSObject {
     }
     
     func drainBGTaskList(all:Bool){
-        let app = UIApplication.shared();
+        let app = UIApplication.shared;
         if(app.responds(to: Selector(("endBackgroundTask")))) {
             let count = self._bgTaskList.count;
             
@@ -703,11 +702,12 @@ class NotificationManager : NSObject {
         if(debug == true) {
             log(message: "Sending Notification");
             let notification = UILocalNotification();
-            notification.timeZone = TimeZone.default;
+            let locale = NSTimeZone.init(abbreviation: "BST")
+            notification.timeZone = locale as? TimeZone;
             notification.soundName = UILocalNotificationDefaultSoundName;
             notification.alertBody = text;
             
-            UIApplication.shared().scheduleLocalNotification(notification);
+            UIApplication.shared.scheduleLocalNotification(notification);
         }
     }
 }
