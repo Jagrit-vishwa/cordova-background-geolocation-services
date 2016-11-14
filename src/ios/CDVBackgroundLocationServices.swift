@@ -85,6 +85,7 @@ var activityCommandDelegate:CDVCommandDelegate?;
     // 7 notificationText-- (not used on ios),
     // 8 activityType, fences -- (not used ios)
     // 9 useActivityDetection
+    @objc(configure:)
     func configure(command: CDVInvokedUrlCommand) {
         
         //log(message: "configure arguments: \(command.arguments)");
@@ -109,19 +110,21 @@ var activityCommandDelegate:CDVCommandDelegate?;
         commandDelegate!.send(pluginResult, callbackId:command.callbackId)
     }
     
+    @objc(registerForLocationUpdates:)
     func registerForLocationUpdates(command: CDVInvokedUrlCommand) {
         log(message: "registerForLocationUpdates");
         locationUpdateCallback = command.callbackId;
         locationCommandDelegate = commandDelegate;
     }
     
+    @objc(registerForActivityUpdates:)
     func registerForActivityUpdates(command : CDVInvokedUrlCommand) {
         log(message: "registerForActivityUpdates");
         activityUpdateCallback = command.callbackId;
         activityCommandDelegate = commandDelegate;
     }
     
-    
+    @objc(start:)
     func start(command: CDVInvokedUrlCommand) {
         log(message: "Started");
         enabled = true;
@@ -137,6 +140,7 @@ var activityCommandDelegate:CDVCommandDelegate?;
         commandDelegate!.send(pluginResult, callbackId:command.callbackId)
     }
     
+    @objc(stop:)
     func stop(command: CDVInvokedUrlCommand) {
         log(message: "Stopped");
         enabled = false;
@@ -148,6 +152,7 @@ var activityCommandDelegate:CDVCommandDelegate?;
         commandDelegate!.send(pluginResult, callbackId:command.callbackId)
     }
     
+    @objc(getVersion:)
     func getVersion(command: CDVInvokedUrlCommand) {
         log(message: "Returning Version \(PLUGIN_VERSION)");
         
@@ -155,6 +160,7 @@ var activityCommandDelegate:CDVCommandDelegate?;
         commandDelegate!.send(pluginResult, callbackId: command.callbackId);
     }
     
+    @objc(startAggressiveTracking:)
     func startAggressiveTracking(command: CDVInvokedUrlCommand) {
         log(message: "startAggressiveTracking");
         locationManager.startAggressiveTracking();
@@ -629,7 +635,7 @@ var syncSeconds:TimeInterval = 2;
 
 //Task Manager Singleton
 class TaskManager : NSObject {
-
+    
     
     var _bgTaskList = [Int]();
     var _masterTaskId = UIBackgroundTaskInvalid;
