@@ -54,9 +54,6 @@ var activityCommandDelegate:CDVCommandDelegate?;
     override open func pluginInitialize() {
         super.pluginInitialize();
 
-        locationManager.requestLocationPermissions();
-        self.promptForNotificationPermission();
-
         NotificationCenter.default.addObserver(
             self,
             selector: Selector("onResume"),
@@ -126,6 +123,9 @@ var activityCommandDelegate:CDVCommandDelegate?;
     open func start(_ command: CDVInvokedUrlCommand) {
         log(message: "Started");
         enabled = true;
+        
+        locationManager.requestLocationPermissions();
+        promptForNotificationPermission();
 
         log(message: "Are we in the background? \(background)");
 
